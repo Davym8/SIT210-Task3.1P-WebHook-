@@ -1,0 +1,47 @@
+#include "Adafruit_DHT.h"
+#define DHTPIN 2
+#define DHTTYPE DHT22
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() 
+{
+	Serial.begin(9600); 
+	Serial.println("Temperature and Humidity");
+
+	dht.begin();
+}
+
+
+
+void loop() 
+{
+	
+	double hum = dht.getHumidity();
+// temperature as Celsius
+	double Temp = dht.getTempCelcius();
+
+  
+// Check if any reads failed and exit early (to try again).
+	if (isnan(hum) || isnan(Temp)) 
+	{
+		Serial.println("Failed to read!");
+	}
+	if ((Temp) > 50 || (Temp) < 0)
+	{
+	    Serial.println("Error");
+	}
+	
+	Serial.print("Humidity: "); 
+	Serial.print(hum);
+	Serial.print("% - ");
+	Serial.print("Temperature: "); 
+	Serial.print(Temp);
+	Serial.print("C ");
+	Serial.println(Time.timeStr());
+	
+	Particle.publish("Temp", String(Temp), PRIVATE);
+	//Particle.publish("Humidity", String(hum), PRIVATE);
+	delay(5000);
+	
+}
